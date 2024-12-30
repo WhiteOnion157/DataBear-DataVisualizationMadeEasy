@@ -6,12 +6,14 @@ from discord import File
 async def create_graph(message):
     # message contains len(message.attachments) attachments
     fig, axs = plt.subplots(len(message.attachments), 1, figsize=(10, 5*len(message.attachments)))
+    #This prevents issue wwhen only one file is submitted. 
     if len(message.attachments) == 1:
         axs = [axs]
     for i, attachment in enumerate(message.attachments):
         file_content = await attachment.read()
         current_csv = pd.read_csv(io.BytesIO(file_content), header=None)
         current_csv = current_csv.sort_values(by=current_csv.columns[0])
+        #Plotting the first and second column
         x = current_csv.iloc[:, 0]
         y = current_csv.iloc[:, 1]
         axs[i].plot(x, y, marker='x')
